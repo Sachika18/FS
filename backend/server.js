@@ -12,6 +12,8 @@ dotenv.config();
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const attendanceRoutes = require('./routes/attendance');
+const examsRoutes = require('./routes/exams');
+const devRoutes = require('./routes/dev');
 
 // Initialize express app
 const app = express();
@@ -42,6 +44,8 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/api/exams', examsRoutes);
+app.use('/api/dev', devRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

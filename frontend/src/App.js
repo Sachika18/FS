@@ -21,6 +21,8 @@ import AssessmentList from './pages/AssessmentList';
 import AssessmentForm from './pages/AssessmentForm';
 import StudentProfile from './pages/StudentProfile';
 import TeacherProfile from './pages/TeacherProfile';
+import ExamManagement from './pages/ExamManagement';
+import ExamEligibility from './pages/ExamEligibility';
 import NotFound from './pages/NotFound';
 
 const theme = createTheme({
@@ -58,10 +60,12 @@ function App() {
             <Route path="attendance/report" element={<AttendanceReport />} />
             <Route path="assessments" element={<AssessmentList />} />
             <Route path="assessments/add" element={<AssessmentForm />} />
+            <Route path="exams" element={<ExamManagement />} />
             <Route path="teacher/profile" element={<TeacherProfile />} />
             
             {/* Student Routes */}
             <Route path="my-attendance" element={<StudentAttendance />} />
+            <Route path="my-eligibility" element={<ExamEligibility />} />
             <Route path="student/:id" element={<StudentProfile />} />
             <Route path="student" element={<StudentProfile />} />
             

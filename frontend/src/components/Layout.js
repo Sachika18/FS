@@ -111,8 +111,7 @@ const Layout = () => {
     if (user && user.role === 'student') {
       navigate('/student');
     } else if (user && user.role === 'teacher') {
-      // For teachers, we could implement a teacher profile page in the future
-      navigate('/dashboard');
+      navigate('/teacher/profile');
     }
   };
 
@@ -245,6 +244,22 @@ const Layout = () => {
                       <ListItemText primary="Assessments" />
                     </ListItemButton>
                   </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate('/exams')}>
+                      <ListItemIcon>
+                        <AssessmentIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Exams & Eligibility" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate('/teacher/profile')}>
+                      <ListItemIcon>
+                        <PersonIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="My Profile" />
+                    </ListItemButton>
+                  </ListItem>
                 </>
               )}
               
@@ -256,6 +271,14 @@ const Layout = () => {
                         <AssignmentIcon />
                       </ListItemIcon>
                       <ListItemText primary="My Attendance" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate('/my-eligibility')}>
+                      <ListItemIcon>
+                        <AssessmentIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Exam Eligibility" />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>

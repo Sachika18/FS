@@ -95,4 +95,16 @@ export const attendanceAPI = {
   createAssessment: (data) => api.post('/attendance/assessment', data)
 };
 
+// Exams API
+export const examsAPI = {
+  getAllExams: (params) => api.get('/exams', { params }),
+  getExam: (id) => api.get(`/exams/${id}`),
+  createExam: (data) => api.post('/exams', data),
+  updateExam: (id, data) => api.put(`/exams/${id}`, data),
+  deleteExam: (id) => api.delete(`/exams/${id}`),
+  calculateEligibility: (id) => api.post(`/exams/${id}/calculate-eligibility`),
+  getExamEligibility: (id) => api.get(`/exams/${id}/eligibility`),
+  getStudentEligibility: (id) => api.get(`/exams/eligibility/student/${id}`)
+};
+
 export default api;

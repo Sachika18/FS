@@ -30,6 +30,7 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [seedLoading, setSeedLoading] = useState(false);
+  const [eligibilityLoading, setEligibilityLoading] = useState(false);
   const [stats, setStats] = useState({
     totalStudents: 0,
     todayAttendance: 0,
@@ -166,6 +167,31 @@ const Dashboard = () => {
       console.error('Error running attendance seeder:', err);
       setError('Failed to generate attendance data. Please try again.');
       setSeedLoading(false);
+    }
+  };
+  
+  // Function to run the eligibility system setup
+  const runEligibilitySetup = async () => {
+    try {
+      setEligibilityLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to run the setup
+      await fetch('https://fs-4mtv.onrender.com/api/dev/setup-eligibility', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Eligibility system setup completed successfully! Please refresh the page to see the changes.');
+      setEligibilityLoading(false);
+    } catch (err) {
+      console.error('Error running eligibility setup:', err);
+      setError('Failed to set up eligibility system. Please try again.');
+      setEligibilityLoading(false);
     }
   };
 
@@ -331,20 +357,31 @@ const Dashboard = () => {
                 </Button>
               </Grid>
               
-              {/* This button is for testing purposes only */}
+              {/* These buttons are for testing purposes only */}
               <Grid item xs={12}>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={runAttendanceSeeder}
-                  disabled={seedLoading}
-                  sx={{ mt: 2 }}
-                >
-                  {seedLoading ? 'Generating Test Data...' : 'Generate Test Attendance Data'}
-                </Button>
-                <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                  This button is for testing purposes only. It will generate random attendance data for all students.
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={runAttendanceSeeder}
+                    disabled={seedLoading}
+                  >
+                    {seedLoading ? 'Generating Test Data...' : 'Generate Test Attendance Data'}
+                  </Button>
+                  
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={runEligibilitySetup}
+                    disabled={eligibilityLoading}
+                  >
+                    {eligibilityLoading ? 'Setting Up Eligibility System...' : 'Setup Exam Eligibility System'}
+                  </Button>
+                  
+                  <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                    These buttons are for testing purposes only. They will generate test data for the attendance and eligibility system.
+                  </Typography>
+                </Box>
               </Grid>
             </Grid>
           </Box>
@@ -455,7 +492,7 @@ const Dashboard = () => {
                   View My Attendance
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -464,6 +501,17 @@ const Dashboard = () => {
                   sx={{ py: 2 }}
                 >
                   View My Profile
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<AssessmentIcon />}
+                  onClick={() => navigate('/my-eligibility')}
+                  sx={{ py: 2 }}
+                >
+                  Exam Eligibility
                 </Button>
               </Grid>
             </Grid>
