@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Attendance Management System
 
 A full-stack application for managing student attendance with React, Node.js (Express), and MongoDB.
@@ -110,3 +111,7 @@ A full-stack application for managing student attendance with React, Node.js (Ex
 
 ## License
 MIT
+=======
+# FS
+Attendance Management System
+>>>>>>> 7425ea6dfde3a6e8afa4ffc0b417ddc42521f4fb

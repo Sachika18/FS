@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.post('/api/auth/login', { email, password });
       console.log("AuthContext - Login response:", res.data);
       
-      if (!res.data.user || !res.data.user._id) { // Changed from user.id to user._id
+      if (!res.data.user || !res.data.user.id) {
         console.error("AuthContext - Login response missing user ID:", res.data);
         setError('Login response missing user information');
         throw new Error('Login response missing user information');
@@ -105,6 +105,11 @@ export const AuthProvider = ({ children }) => {
     navigate('/login');
   };
   
+  // Update user in context
+  const updateUser = (userData) => {
+    setUser(userData);
+  };
+  
   const value = {
     user,
     token,
@@ -113,6 +118,7 @@ export const AuthProvider = ({ children }) => {
     register,
     login,
     logout,
+    updateUser,
     isAuthenticated: !!user,
     isTeacher: user?.role === 'teacher',
     isStudent: user?.role === 'student'

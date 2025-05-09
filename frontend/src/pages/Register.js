@@ -25,14 +25,30 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'student'
+    role: 'student',
+    // Student fields
+    usn: '',
+    section: 'A',
+    semester: 1,
+    // Teacher field
+    subject: 'FullStack'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const { register } = useAuth();
   
-  const { name, email, password, confirmPassword, role } = formData;
+  const { 
+    name, 
+    email, 
+    password, 
+    confirmPassword, 
+    role, 
+    usn, 
+    section, 
+    semester, 
+    subject 
+  } = formData;
   
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,14 +74,42 @@ const Register = () => {
       return;
     }
     
+    // Student-specific validation
+    if (role === 'student' && !usn) {
+      setError('USN is required for students');
+      return;
+    }
+    
+    // Teacher-specific validation
+    if (role === 'teacher' && !subject) {
+      setError('Subject is required for teachers');
+      return;
+    }
+    
     try {
       setLoading(true);
-      await register({
+      
+      // Create user data object with common fields
+      const userData = {
         name,
         email,
         password,
         role
-      });
+      };
+      
+      // Add student-specific fields
+      if (role === 'student') {
+        userData.usn = usn;
+        userData.section = section;
+        userData.semester = parseInt(semester, 10);
+      }
+      
+      // Add teacher-specific fields
+      if (role === 'teacher') {
+        userData.subject = subject;
+      }
+      
+      await register(userData);
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed. Please try again.');
     } finally {
@@ -164,6 +208,85 @@ const Register = () => {
                   </Select>
                 </FormControl>
               </Grid>
+              
+              {/* Student-specific fields */}
+              {role === 'student' && (
+                <>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      name="usn"
+                      label="USN (Unique Student Number)"
+                      id="usn"
+                      value={usn}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel id="section-label">Section</InputLabel>
+                      <Select
+                        labelId="section-label"
+                        id="section"
+                        name="section"
+                        value={section}
+                        label="Section"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="A">A</MenuItem>
+                        <MenuItem value="B">B</MenuItem>
+                        <MenuItem value="C">C</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel id="semester-label">Semester</InputLabel>
+                      <Select
+                        labelId="semester-label"
+                        id="semester"
+                        name="semester"
+                        value={semester}
+                        label="Semester"
+                        onChange={handleChange}
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                          <MenuItem key={sem} value={sem}>
+                            {sem}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </>
+              )}
+              
+              {/* Teacher-specific fields */}
+              {role === 'teacher' && (
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="subject-label">Subject</InputLabel>
+                    <Select
+                      labelId="subject-label"
+                      id="subject"
+                      name="subject"
+                      value={subject}
+                      label="Subject"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="FullStack">FullStack</MenuItem>
+                      <MenuItem value="Software Testing">Software Testing</MenuItem>
+                      <MenuItem value="Telecommunication">Telecommunication</MenuItem>
+                      <MenuItem value="Data Science">Data Science</MenuItem>
+                      <MenuItem value="Machine Learning">Machine Learning</MenuItem>
+                      <MenuItem value="Artificial Intelligence">Artificial Intelligence</MenuItem>
+                      <MenuItem value="Computer Networks">Computer Networks</MenuItem>
+                      <MenuItem value="Database Management">Database Management</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              )}
             </Grid>
             <Button
               type="submit"

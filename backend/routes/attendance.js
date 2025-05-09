@@ -99,6 +99,8 @@ router.get('/stats/:id', protect, async (req, res) => {
     // Get all attendance records for the student
     const attendance = await Attendance.find({ student: req.params.id });
     
+    console.log(`Found ${attendance.length} attendance records for student ${req.params.id}`);
+    
     // Calculate total days
     const totalDays = attendance.length;
     
@@ -107,6 +109,41 @@ router.get('/stats/:id', protect, async (req, res) => {
     
     // Calculate attendance percentage
     const attendancePercentage = totalDays > 0 ? (presentDays / totalDays) * 100 : 0;
+    
+    // Calculate subject-wise attendance
+    const subjectWise = {};
+    
+    // Group attendance by subject
+    attendance.forEach(record => {
+      const subject = record.subject;
+      console.log(`Processing attendance record: subject=${subject}, status=${record.status}`);
+      
+      if (!subject) {
+        console.warn('Found attendance record without subject:', record);
+        return; // Skip records without subject
+      }
+      
+      if (!subjectWise[subject]) {
+        subjectWise[subject] = {
+          total: 0,
+          present: 0,
+          percentage: 0
+        };
+      }
+      
+      subjectWise[subject].total += 1;
+      if (record.status === 'present') {
+        subjectWise[subject].present += 1;
+      }
+    });
+    
+    // Calculate percentage for each subject
+    Object.keys(subjectWise).forEach(subject => {
+      const { total, present } = subjectWise[subject];
+      subjectWise[subject].percentage = total > 0 ? (present / total) * 100 : 0;
+    });
+    
+    console.log('Subject-wise attendance data:', subjectWise);
     
     // Get upcoming assessments
     const assessments = await Assessment.find({
@@ -149,6 +186,7 @@ router.get('/stats/:id', protect, async (req, res) => {
         presentDays,
         absentDays: totalDays - presentDays,
         attendancePercentage,
+        subjectWise,
         eligibility
       }
     });
@@ -165,7 +203,7 @@ router.get('/stats/:id', protect, async (req, res) => {
 // @access  Private/Teacher
 router.post('/', protect, authorize('teacher'), async (req, res) => {
   try {
-    const { student, date, status } = req.body;
+    const { student, date, status, subject } = req.body;
     
     // Check if student exists
     const studentExists = await User.findById(student);
@@ -176,13 +214,28 @@ router.post('/', protect, authorize('teacher'), async (req, res) => {
       });
     }
     
+    // Get the teacher's subject if not provided
+    let attendanceSubject = subject;
+    if (!attendanceSubject) {
+      const teacher = await User.findById(req.user.id);
+      attendanceSubject = teacher.subject;
+      
+      if (!attendanceSubject) {
+        return res.status(400).json({
+          success: false,
+          error: 'Subject is required for attendance'
+        });
+      }
+    }
+    
     // Format date to remove time component
     const attendanceDate = new Date(date);
     attendanceDate.setHours(0, 0, 0, 0);
     
-    // Check if attendance already marked for this student on this date
+    // Check if attendance already marked for this student on this date for this subject
     const existingAttendance = await Attendance.findOne({
       student,
+      subject: attendanceSubject,
       date: {
         $gte: attendanceDate,
         $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000)
@@ -206,6 +259,7 @@ router.post('/', protect, authorize('teacher'), async (req, res) => {
       student,
       date: attendanceDate,
       status,
+      subject: attendanceSubject,
       markedBy: req.user.id
     });
     
@@ -226,13 +280,27 @@ router.post('/', protect, authorize('teacher'), async (req, res) => {
 // @access  Private/Teacher
 router.post('/bulk', protect, authorize('teacher'), async (req, res) => {
   try {
-    const { date, records } = req.body;
+    const { date, records, subject } = req.body;
     
     if (!Array.isArray(records) || records.length === 0) {
       return res.status(400).json({
         success: false,
         error: 'Please provide an array of attendance records'
       });
+    }
+    
+    // Get the teacher's subject if not provided
+    let attendanceSubject = subject;
+    if (!attendanceSubject) {
+      const teacher = await User.findById(req.user.id);
+      attendanceSubject = teacher.subject;
+      
+      if (!attendanceSubject) {
+        return res.status(400).json({
+          success: false,
+          error: 'Subject is required for attendance'
+        });
+      }
     }
     
     // Format date to remove time component
@@ -257,9 +325,10 @@ router.post('/bulk', protect, authorize('teacher'), async (req, res) => {
       }
       
       try {
-        // Check if attendance already marked for this student on this date
+        // Check if attendance already marked for this student on this date for this subject
         const existingAttendance = await Attendance.findOne({
           student,
+          subject: attendanceSubject,
           date: {
             $gte: attendanceDate,
             $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000)
@@ -283,6 +352,7 @@ router.post('/bulk', protect, authorize('teacher'), async (req, res) => {
             student,
             date: attendanceDate,
             status,
+            subject: attendanceSubject,
             markedBy: req.user.id
           });
           

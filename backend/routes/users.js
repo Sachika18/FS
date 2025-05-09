@@ -8,7 +8,15 @@ const { protect, authorize } = require('../middleware/auth');
 // @access  Private/Teacher
 router.get('/', protect, authorize('teacher'), async (req, res) => {
   try {
-    const users = await User.find({ role: 'student' });
+    const { usn } = req.query;
+    let query = { role: 'student' };
+    
+    // If USN is provided, search by USN
+    if (usn) {
+      query.usn = usn;
+    }
+    
+    const users = await User.find(query);
     
     res.status(200).json({
       success: true,
@@ -34,6 +42,40 @@ router.get('/:id', protect, authorize('teacher'), async (req, res) => {
       return res.status(404).json({
         success: false,
         error: 'User not found'
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: user
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+// @desc    Get student by USN
+// @route   GET /api/users/usn/:usn
+// @access  Private
+router.get('/usn/:usn', protect, async (req, res) => {
+  try {
+    const user = await User.findOne({ usn: req.params.usn, role: 'student' });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Student not found'
+      });
+    }
+    
+    // Check if the user is a teacher or the student themselves
+    if (req.user.role !== 'teacher' && req.user.id !== user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        error: 'Not authorized to access this resource'
       });
     }
     

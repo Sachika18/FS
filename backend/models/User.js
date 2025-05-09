@@ -29,6 +29,30 @@ const UserSchema = new mongoose.Schema({
     enum: ['teacher', 'student'],
     default: 'student'
   },
+  // New fields for student
+  usn: {
+    type: String,
+    unique: true,
+    sparse: true, // This allows null values and only enforces uniqueness on non-null values
+    trim: true
+  },
+  section: {
+    type: String,
+    enum: ['A', 'B', 'C'],
+    sparse: true
+  },
+  semester: {
+    type: Number,
+    min: 1,
+    max: 8,
+    sparse: true
+  },
+  // New field for teacher
+  subject: {
+    type: String,
+    enum: ['FullStack', 'Software Testing', 'Telecommunication', 'Data Science', 'Machine Learning', 'Artificial Intelligence', 'Computer Networks', 'Database Management'],
+    sparse: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

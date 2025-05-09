@@ -150,17 +150,28 @@ const AttendanceMarking = () => {
       setError('');
       setSuccess('');
       
+      // Validate that we have a subject
+      if (!user.subject) {
+        setError('Subject is required to mark attendance. Please update your profile.');
+        setSavingAttendance(false);
+        return;
+      }
+      
       const formattedDate = format(selectedDate, 'yyyy-MM-dd');
       
       // Prepare data for bulk update
       const records = attendanceData.map(item => ({
         student: item.student,
-        status: item.status
+        status: item.status,
+        subject: user.subject // Use the teacher's subject
       }));
+      
+      console.log('Marking attendance with subject:', user.subject);
       
       await attendanceAPI.markBulkAttendance({
         date: formattedDate,
-        records
+        records,
+        subject: user.subject
       });
       
       setSuccess('Attendance saved successfully');

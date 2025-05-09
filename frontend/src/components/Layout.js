@@ -108,7 +108,12 @@ const Layout = () => {
 
   const handleProfile = () => {
     handleClose();
-    // Navigate to profile page (to be implemented)
+    if (user && user.role === 'student') {
+      navigate('/student');
+    } else if (user && user.role === 'teacher') {
+      // For teachers, we could implement a teacher profile page in the future
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -244,14 +249,24 @@ const Layout = () => {
               )}
               
               {!isTeacher && (
-                <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigate('/my-attendance')}>
-                    <ListItemIcon>
-                      <AssignmentIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="My Attendance" />
-                  </ListItemButton>
-                </ListItem>
+                <>
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate('/my-attendance')}>
+                      <ListItemIcon>
+                        <AssignmentIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="My Attendance" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate('/student')}>
+                      <ListItemIcon>
+                        <PersonIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="My Profile" />
+                    </ListItemButton>
+                  </ListItem>
+                </>
               )}
             </List>
           </Drawer>

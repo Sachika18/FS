@@ -16,6 +16,11 @@ const AttendanceSchema = new mongoose.Schema({
     enum: ['present', 'absent'],
     required: true
   },
+  subject: {
+    type: String,
+    enum: ['FullStack', 'Software Testing', 'Telecommunication', 'Data Science', 'Machine Learning', 'Artificial Intelligence', 'Computer Networks', 'Database Management'],
+    required: true
+  },
   markedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -27,7 +32,7 @@ const AttendanceSchema = new mongoose.Schema({
   }
 });
 
-// Create a compound index to ensure a student can only have one attendance record per day
-AttendanceSchema.index({ student: 1, date: 1 }, { unique: true });
+// Create a compound index to ensure a student can only have one attendance record per day per subject
+AttendanceSchema.index({ student: 1, date: 1, subject: 1 }, { unique: true });
 
 module.exports = mongoose.model('Attendance', AttendanceSchema);
