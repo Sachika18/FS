@@ -59,7 +59,7 @@ const TeacherProfile = () => {
       setError('');
       setSuccess('');
       
-      const res = await axios.put('/api/auth/updateprofile', formData, {
+      const res = await axios.put('https://fs-4mtv.onrender.com/api/auth/updateprofile', formData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`

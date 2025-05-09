@@ -28,6 +28,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [seedLoading, setSeedLoading] = useState(false);
   const [stats, setStats] = useState({
     totalStudents: 0,
     todayAttendance: 0,
@@ -141,6 +143,31 @@ const Dashboard = () => {
       setError('User information not available. Please log in again.');
     }
   }, [isTeacher, user, authLoading]);
+  
+  // Function to run the attendance seeder for testing
+  const runAttendanceSeeder = async () => {
+    try {
+      setSeedLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to run the seeder
+      await fetch('https://fs-4mtv.onrender.com/api/dev/seed-attendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Attendance data generated successfully! Please refresh the page to see the changes.');
+      setSeedLoading(false);
+    } catch (err) {
+      console.error('Error running attendance seeder:', err);
+      setError('Failed to generate attendance data. Please try again.');
+      setSeedLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -162,6 +189,12 @@ const Dashboard = () => {
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
+        </Alert>
+      )}
+      
+      {success && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          {success}
         </Alert>
       )}
       
@@ -297,6 +330,22 @@ const Dashboard = () => {
                   Add Assessment
                 </Button>
               </Grid>
+              
+              {/* This button is for testing purposes only */}
+              <Grid item xs={12}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={runAttendanceSeeder}
+                  disabled={seedLoading}
+                  sx={{ mt: 2 }}
+                >
+                  {seedLoading ? 'Generating Test Data...' : 'Generate Test Attendance Data'}
+                </Button>
+                <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                  This button is for testing purposes only. It will generate random attendance data for all students.
+                </Typography>
+              </Grid>
             </Grid>
           </Box>
           
@@ -404,6 +453,17 @@ const Dashboard = () => {
                   sx={{ py: 2 }}
                 >
                   View My Attendance
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<PeopleIcon />}
+                  onClick={() => navigate('/student')}
+                  sx={{ py: 2 }}
+                >
+                  View My Profile
                 </Button>
               </Grid>
             </Grid>

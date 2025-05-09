@@ -2,6 +2,9 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+// Set default base URL for all axios requests
+axios.defaults.baseURL = 'https://fs-4mtv.onrender.com';
+
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       console.log("AuthContext - Token available, loading user data");
       
       try {
-        const res = await axios.get('/api/auth/me');
+        const res = await axios.get('https://fs-4mtv.onrender.com/api/auth/me');
         console.log("AuthContext - User data loaded:", res.data.data);
         setUser(res.data.data);
         setLoading(false);
@@ -55,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      const res = await axios.post('/api/auth/register', userData);
+      const res = await axios.post('https://fs-4mtv.onrender.com/api/auth/register', userData);
       
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
@@ -74,7 +77,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       console.log("AuthContext - Attempting login with email:", email);
       
-      const res = await axios.post('/api/auth/login', { email, password });
+      const res = await axios.post('https://fs-4mtv.onrender.com/api/auth/login', { email, password });
       console.log("AuthContext - Login response:", res.data);
       
       if (!res.data.user || !res.data.user.id) {

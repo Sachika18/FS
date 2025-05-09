@@ -78,6 +78,7 @@ export const authAPI = {
 export const usersAPI = {
   getAllStudents: () => api.get('/users'),
   getUser: (id) => api.get(`/users/${id}`),
+  getUserByUSN: (usn) => api.get(`/users/usn/${usn}`),
   createUser: (userData) => api.post('/users', userData),
   updateUser: (id, userData) => api.put(`/users/${id}`, userData),
   deleteUser: (id) => api.delete(`/users/${id}`)
