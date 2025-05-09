@@ -10,8 +10,16 @@
     "seed:attendance": "node scripts/seed-attendance.js",
     "seed:exams": "node scripts/seed-exams.js",
     "generate:monthly": "node scripts/generate-monthly-attendance.js",
+    "generate:till-june": "node scripts/generate-attendance-till-june.js",
+    "generate:test-attendance": "node scripts/generate-test-attendance.js",
+    "reset:attendance": "node scripts/reset-and-generate-attendance.js",
+    "fix:attendance": "node scripts/fix-attendance-data.js",
+    "generate:exams-till-june": "node scripts/generate-exams-till-june.js",
     "calculate:eligibility": "node scripts/calculate-eligibility.js",
-    "setup:eligibility": "node scripts/setup-eligibility-system.js"
+    "calculate:all-eligibility": "node scripts/calculate-all-eligibility.js",
+    "setup:eligibility": "node scripts/setup-eligibility-system.js",
+    "setup:complete": "node scripts/setup-complete-system.js",
+    "create:users": "node scripts/create-test-users.js"
   },
   "keywords": [
     "attendance",

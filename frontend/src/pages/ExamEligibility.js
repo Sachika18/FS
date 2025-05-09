@@ -38,7 +38,7 @@ const ExamEligibility = () => {
       }
       
       // Get eligibility data
-      const res = await axios.get(`https://fs-4mtv.onrender.com/api/exams/eligibility/student/${user._id}`, {
+      const res = await axios.get(`http://localhost:5000/api/exams/eligibility/student/${user._id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -72,7 +72,7 @@ const ExamEligibility = () => {
       
       // Get upcoming exams
       const today = new Date();
-      const examsRes = await axios.get('https://fs-4mtv.onrender.com/api/exams', {
+      const examsRes = await axios.get('http://localhost:5000/api/exams', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

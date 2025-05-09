@@ -31,6 +31,11 @@ const Dashboard = () => {
   const [success, setSuccess] = useState('');
   const [seedLoading, setSeedLoading] = useState(false);
   const [eligibilityLoading, setEligibilityLoading] = useState(false);
+  const [completeSetupLoading, setCompleteSetupLoading] = useState(false);
+  const [testAttendanceLoading, setTestAttendanceLoading] = useState(false);
+  const [calculateAllEligibilityLoading, setCalculateAllEligibilityLoading] = useState(false);
+  const [resetAttendanceLoading, setResetAttendanceLoading] = useState(false);
+  const [fixAttendanceLoading, setFixAttendanceLoading] = useState(false);
   const [stats, setStats] = useState({
     totalStudents: 0,
     todayAttendance: 0,
@@ -153,7 +158,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the seeder
-      await fetch('https://fs-4mtv.onrender.com/api/dev/seed-attendance', {
+      await fetch('http://localhost:5000/api/dev/seed-attendance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -178,7 +183,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the setup
-      await fetch('https://fs-4mtv.onrender.com/api/dev/setup-eligibility', {
+      await fetch('http://localhost:5000/api/dev/setup-eligibility', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -192,6 +197,131 @@ const Dashboard = () => {
       console.error('Error running eligibility setup:', err);
       setError('Failed to set up eligibility system. Please try again.');
       setEligibilityLoading(false);
+    }
+  };
+  
+  // Function to run the complete system setup with data until June
+  const runCompleteSetup = async () => {
+    try {
+      setCompleteSetupLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to run the complete setup
+      await fetch('http://localhost:5000/api/dev/setup-complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Complete system setup with data until June completed successfully! Please refresh the page to see the changes.');
+      setCompleteSetupLoading(false);
+    } catch (err) {
+      console.error('Error running complete setup:', err);
+      setError('Failed to set up complete system. Please try again.');
+      setCompleteSetupLoading(false);
+    }
+  };
+  
+  // Function to generate test attendance data until June
+  const generateTestAttendance = async () => {
+    try {
+      setTestAttendanceLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to generate test attendance data
+      await fetch('http://localhost:5000/api/dev/generate-test-attendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Test attendance data generated successfully! Please refresh the page to see the changes.');
+      setTestAttendanceLoading(false);
+    } catch (err) {
+      console.error('Error generating test attendance data:', err);
+      setError('Failed to generate test attendance data. Please try again.');
+      setTestAttendanceLoading(false);
+    }
+  };
+  
+  // Function to calculate eligibility for all months with attendance data
+  const calculateAllEligibility = async () => {
+    try {
+      setCalculateAllEligibilityLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to calculate eligibility for all months
+      await fetch('http://localhost:5000/api/dev/calculate-all-eligibility', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Eligibility calculated for all months successfully! Please refresh the page to see the changes.');
+      setCalculateAllEligibilityLoading(false);
+    } catch (err) {
+      console.error('Error calculating eligibility for all months:', err);
+      setError('Failed to calculate eligibility for all months. Please try again.');
+      setCalculateAllEligibilityLoading(false);
+    }
+  };
+  
+  // Function to reset and generate attendance data for all subjects until June
+  const resetAttendance = async () => {
+    try {
+      setResetAttendanceLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to reset and generate attendance data
+      await fetch('http://localhost:5000/api/dev/reset-attendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Attendance data reset and generated successfully! Please refresh the page to see the changes.');
+      setResetAttendanceLoading(false);
+    } catch (err) {
+      console.error('Error resetting and generating attendance data:', err);
+      setError('Failed to reset and generate attendance data. Please try again.');
+      setResetAttendanceLoading(false);
+    }
+  };
+  
+  // Function to fix attendance data for all subjects until June
+  const fixAttendance = async () => {
+    try {
+      setFixAttendanceLoading(true);
+      setError('');
+      setSuccess('');
+      
+      // Make a request to fix attendance data
+      await fetch('http://localhost:5000/api/dev/fix-attendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      setSuccess('Attendance data fixed and generated successfully! Please refresh the page to see the changes.');
+      setFixAttendanceLoading(false);
+    } catch (err) {
+      console.error('Error fixing attendance data:', err);
+      setError('Failed to fix attendance data. Please try again.');
+      setFixAttendanceLoading(false);
     }
   };
 
@@ -376,6 +506,55 @@ const Dashboard = () => {
                     disabled={eligibilityLoading}
                   >
                     {eligibilityLoading ? 'Setting Up Eligibility System...' : 'Setup Exam Eligibility System'}
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={runCompleteSetup}
+                    disabled={completeSetupLoading}
+                    sx={{ mb: 1 }}
+                  >
+                    {completeSetupLoading ? 'Setting Up Complete System...' : 'Setup Complete System (with data until June)'}
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={generateTestAttendance}
+                    disabled={testAttendanceLoading}
+                    sx={{ mb: 1 }}
+                  >
+                    {testAttendanceLoading ? 'Generating Test Attendance...' : 'Generate Test Attendance Only (until June)'}
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={calculateAllEligibility}
+                    disabled={calculateAllEligibilityLoading}
+                    sx={{ mb: 1 }}
+                  >
+                    {calculateAllEligibilityLoading ? 'Calculating Eligibility...' : 'Calculate Eligibility for All Months'}
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={resetAttendance}
+                    disabled={resetAttendanceLoading}
+                    sx={{ mb: 1 }}
+                  >
+                    {resetAttendanceLoading ? 'Resetting Attendance Data...' : 'Reset & Generate Attendance (All Subjects)'}
+                  </Button>
+                  
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={fixAttendance}
+                    disabled={fixAttendanceLoading}
+                  >
+                    {fixAttendanceLoading ? 'Fixing Attendance Data...' : 'Fix Attendance Data (All Subjects)'}
                   </Button>
                   
                   <Typography variant="caption" display="block" sx={{ mt: 1 }}>

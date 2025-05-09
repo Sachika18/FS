@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 // Set default base URL for all axios requests
-axios.defaults.baseURL = 'https://fs-4mtv.onrender.com';
+axios.defaults.baseURL = 'http://localhost:5000';
 
 const AuthContext = createContext();
 
@@ -38,12 +38,22 @@ export const AuthProvider = ({ children }) => {
       console.log("AuthContext - Token available, loading user data");
       
       try {
-        const res = await axios.get('https://fs-4mtv.onrender.com/api/auth/me');
-        console.log("AuthContext - User data loaded:", res.data.data);
-        setUser(res.data.data);
+        const response = await fetch('http://localhost:5000/api/auth/me', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to load user: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log("AuthContext - User data loaded:", data.data);
+        setUser(data.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error loading user:', err.response?.data?.error || err.message);
+        console.error('Error loading user:', err.message);
         localStorage.removeItem('token');
         setToken(null);
         setUser(null);
@@ -58,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      const res = await axios.post('https://fs-4mtv.onrender.com/api/auth/register', userData);
+      const res = await axios.post('http://localhost:5000/api/auth/register', userData);
       
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
@@ -77,7 +87,26 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       console.log("AuthContext - Attempting login with email:", email);
       
-      const res = await axios.post('https://fs-4mtv.onrender.com/api/auth/login', { email, password });
+      // Use fetch instead of axios for login
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw {
+          response: {
+            status: response.status,
+            data: errorData
+          }
+        };
+      }
+      
+      const res = { data: await response.json() };
       console.log("AuthContext - Login response:", res.data);
       
       if (!res.data.user || !res.data.user.id) {
@@ -95,7 +124,20 @@ export const AuthProvider = ({ children }) => {
       return res.data;
     } catch (err) {
       console.error("AuthContext - Login error:", err);
-      setError(err.response?.data?.error || 'Login failed');
+      
+      if (err.response) {
+        console.error("AuthContext - Response data:", err.response.data);
+        console.error("AuthContext - Response status:", err.response.status);
+        console.error("AuthContext - Response headers:", err.response.headers);
+        setError(err.response.data?.error || `Login failed with status ${err.response.status}`);
+      } else if (err.request) {
+        console.error("AuthContext - Request error (no response):", err.request);
+        setError('No response received from server');
+      } else {
+        console.error("AuthContext - Error message:", err.message);
+        setError(`Login error: ${err.message}`);
+      }
+      
       throw err;
     }
   };

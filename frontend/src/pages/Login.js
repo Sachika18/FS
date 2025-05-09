@@ -44,7 +44,18 @@ const Login = () => {
       setLoading(true);
       await login(email, password);
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
+      console.error('Login error details:', err);
+      if (err.response) {
+        console.error('Response data:', err.response.data);
+        console.error('Response status:', err.response.status);
+        setError(err.response.data?.error || `Login failed with status ${err.response.status}. Please check your credentials.`);
+      } else if (err.request) {
+        console.error('Request error:', err.request);
+        setError('No response received from server. Please try again later.');
+      } else {
+        console.error('Error message:', err.message);
+        setError(`Login failed: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
