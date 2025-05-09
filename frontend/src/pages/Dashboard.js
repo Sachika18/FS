@@ -158,7 +158,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the seeder
-      await fetch('http://localhost:5000/api/dev/seed-attendance', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/seed-attendance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the setup
-      await fetch('http://localhost:5000/api/dev/setup-eligibility', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/setup-eligibility', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the complete setup
-      await fetch('http://localhost:5000/api/dev/setup-complete', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/setup-complete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to generate test attendance data
-      await fetch('http://localhost:5000/api/dev/generate-test-attendance', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/generate-test-attendance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to calculate eligibility for all months
-      await fetch('http://localhost:5000/api/dev/calculate-all-eligibility', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/calculate-all-eligibility', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -283,7 +283,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to reset and generate attendance data
-      await fetch('http://localhost:5000/api/dev/reset-attendance', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/reset-attendance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -308,7 +308,7 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to fix attendance data
-      await fetch('http://localhost:5000/api/dev/fix-attendance', {
+      await fetch('https://fs-4mtv.onrender.com/api/dev/fix-attendance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

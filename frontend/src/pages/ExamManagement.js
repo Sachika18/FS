@@ -81,7 +81,7 @@ const ExamManagement = () => {
       setError('');
       setSuccess('');
       
-      const res = await axios.get('http://localhost:5000/api/exams', {
+      const res = await axios.get('https://fs-4mtv.onrender.com/api/exams', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -201,7 +201,7 @@ const ExamManagement = () => {
       
       if (currentExam) {
         // Update existing exam
-        res = await axios.put(`http://localhost:5000/api/exams/${currentExam._id}`, data, {
+        res = await axios.put(`https://fs-4mtv.onrender.com/api/exams/${currentExam._id}`, data, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -210,7 +210,7 @@ const ExamManagement = () => {
         setSuccess('Exam updated successfully');
       } else {
         // Create new exam
-        res = await axios.post('http://localhost:5000/api/exams', data, {
+        res = await axios.post('https://fs-4mtv.onrender.com/api/exams', data, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -255,7 +255,7 @@ const ExamManagement = () => {
       setError('');
       setSuccess('');
       
-      await axios.delete(`http://localhost:5000/api/exams/${examId}`, {
+      await axios.delete(`https://fs-4mtv.onrender.com/api/exams/${examId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -283,7 +283,7 @@ const ExamManagement = () => {
       setError('');
       setSuccess('');
       
-      const res = await axios.post(`http://localhost:5000/api/exams/${examId}/calculate-eligibility`, {}, {
+      const res = await axios.post(`https://fs-4mtv.onrender.com/api/exams/${examId}/calculate-eligibility`, {}, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -311,7 +311,7 @@ const ExamManagement = () => {
     try {
       setError('');
       
-      const res = await axios.get(`http://localhost:5000/api/exams/${examId}/eligibility`, {
+      const res = await axios.get(`https://fs-4mtv.onrender.com/api/exams/${examId}/eligibility`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

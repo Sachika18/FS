@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 // Set default base URL for all axios requests
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://fs-4mtv.onrender.com';
 
 const AuthContext = createContext();
 
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       console.log("AuthContext - Token available, loading user data");
       
       try {
-        const response = await fetch('http://localhost:5000/api/auth/me', {
+        const response = await fetch('https://fs-4mtv.onrender.com/api/auth/me', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      const res = await axios.post('http://localhost:5000/api/auth/register', userData);
+      const res = await axios.post('https://fs-4mtv.onrender.com/api/auth/register', userData);
       
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
       console.log("AuthContext - Attempting login with email:", email);
       
       // Use fetch instead of axios for login
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('https://fs-4mtv.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
