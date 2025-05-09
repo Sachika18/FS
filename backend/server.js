@@ -22,7 +22,7 @@ const app = express();
 app.use(express.json());
 // Configure CORS
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5000', '*'],
+  origin: ['http://localhost:3000', 'http://localhost:5000', 'https://attendance-management-4tuv.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -30,6 +30,15 @@ app.use(cors({
 
 // Handle preflight requests
 app.options('*', cors());
+
+// Add additional CORS headers for all responses
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://attendance-management-4tuv.onrender.com');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 app.use(morgan('dev'));
 
 // Connect to MongoDB

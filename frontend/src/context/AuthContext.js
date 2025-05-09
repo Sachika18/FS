@@ -38,19 +38,14 @@ export const AuthProvider = ({ children }) => {
       console.log("AuthContext - Token available, loading user data");
       
       try {
-        const response = await fetch('https://fs-4mtv.onrender.com/api/auth/me', {
+        const response = await axios.get('/api/auth/me', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         
-        if (!response.ok) {
-          throw new Error(`Failed to load user: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log("AuthContext - User data loaded:", data.data);
-        setUser(data.data);
+        console.log("AuthContext - User data loaded:", response.data.data);
+        setUser(response.data.data);
         setLoading(false);
       } catch (err) {
         console.error('Error loading user:', err.message);
@@ -87,26 +82,8 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       console.log("AuthContext - Attempting login with email:", email);
       
-      // Use fetch instead of axios for login
-      const response = await fetch('https://fs-4mtv.onrender.com/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw {
-          response: {
-            status: response.status,
-            data: errorData
-          }
-        };
-      }
-      
-      const res = { data: await response.json() };
+      // Use axios for login
+      const res = await axios.post('/api/auth/login', { email, password });
       console.log("AuthContext - Login response:", res.data);
       
       if (!res.data.user || !res.data.user.id) {

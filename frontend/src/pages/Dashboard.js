@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Typography,
   Box,
@@ -158,10 +159,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the seeder
-      await fetch('https://fs-4mtv.onrender.com/api/dev/seed-attendance', {
-        method: 'POST',
+      await axios.post('/api/dev/seed-attendance', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
@@ -183,10 +182,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the setup
-      await fetch('https://fs-4mtv.onrender.com/api/dev/setup-eligibility', {
-        method: 'POST',
+      await axios.post('/api/dev/setup-eligibility', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
@@ -208,10 +205,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to run the complete setup
-      await fetch('https://fs-4mtv.onrender.com/api/dev/setup-complete', {
-        method: 'POST',
+      await axios.post('/api/dev/setup-complete', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
@@ -233,10 +228,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to generate test attendance data
-      await fetch('https://fs-4mtv.onrender.com/api/dev/generate-test-attendance', {
-        method: 'POST',
+      await axios.post('/api/dev/generate-test-attendance', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
@@ -258,10 +251,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to calculate eligibility for all months
-      await fetch('https://fs-4mtv.onrender.com/api/dev/calculate-all-eligibility', {
-        method: 'POST',
+      await axios.post('/api/dev/calculate-all-eligibility', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
@@ -283,10 +274,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to reset and generate attendance data
-      await fetch('https://fs-4mtv.onrender.com/api/dev/reset-attendance', {
-        method: 'POST',
+      await axios.post('/api/dev/reset-attendance', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
@@ -308,10 +297,8 @@ const Dashboard = () => {
       setSuccess('');
       
       // Make a request to fix attendance data
-      await fetch('https://fs-4mtv.onrender.com/api/dev/fix-attendance', {
-        method: 'POST',
+      await axios.post('/api/dev/fix-attendance', {}, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
